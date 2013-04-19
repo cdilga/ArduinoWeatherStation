@@ -56,10 +56,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\arduino-1.0.2\hardware\arduino\cores\arduino;D:\arduino-1.0.2\hardware\arduino\variants\standard;D:\arduino-1.0.2\libraries\idDHT11;D:\arduino-1.0.2\libraries\idDHT11\utility;D:\arduino-1.0.2\libraries\OneWire;D:\arduino-1.0.2\libraries\OneWire\utility;D:\arduino-1.0.2\libraries\DallasTemperature;D:\arduino-1.0.2\libraries\DallasTemperature\utility;D:\arduino-1.0.2\libraries\SdFat;D:\arduino-1.0.2\libraries\SdFat\utility;d:\arduino-1.0.2\hardware\tools\avr\avr\include\;d:\arduino-1.0.2\hardware\tools\avr\avr\include\avr\;d:\arduino-1.0.2\hardware\tools\avr\avr\;d:\arduino-1.0.2\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>C:\Users\Chris\Documents\Visual Studio 2012\Projects\ArduinoWeatherStation\Visual Micro\.ArduinoWeatherStation.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>ARDUINO=102;__AVR_ATmega328P__;F_CPU=16000000L;__AVR__;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -87,12 +87,10 @@ void setup()
 	//Begin sdfat with chipselectpin at full speed
 	if(!sd.begin(chipSelect, SPI_FULL_SPEED))
 	{
-		
 		ledError();
-			
 	}
 	// open the file for write headings at end 
-	if (!logFile.open("weatherLog.csv", O_RDWR | O_CREAT | O_AT_END)) {
+	if (!logFile.open("wthr.csv", O_RDWR | O_CREAT | O_AT_END)) {
 		//Display error on the led
 		ledError();
 	}else{
@@ -135,7 +133,7 @@ void loop()
 	logString += "NULL,NULL,NULL";
 	
 	// open the file for write at end like the Native SD library
-	if (!logFile.open("weatherLog.csv", O_RDWR | O_CREAT | O_AT_END)) {
+	if (!logFile.open("wthr.csv", O_RDWR | O_CREAT | O_AT_END)) {
 		ledError();
 	}else{
 	ledError(NULL);
