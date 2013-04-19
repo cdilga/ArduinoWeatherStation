@@ -1,4 +1,11 @@
-//
+/*
+Arduino Weather Station
+
+Please install nesessary headers in the arduino<Version>/libraries folder
+More in formation in the README
+
+Code by Chris Dilger
+*/
 #include <idDHT11.h>
 
 #include <OneWire.h>
