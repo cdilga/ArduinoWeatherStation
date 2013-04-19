@@ -76,9 +76,7 @@ void setup()
 {
 	//Initialise Serial connection 115200
 	Serial.begin(115200);
-	//while(!Serial) {}
-	//while (Serial.read() <= 0) {};
-	Serial.println("FAR OUT");
+
 	//Setup status led
 	pinMode(ledPin, OUTPUT);
 	ledError(NULL);
@@ -106,6 +104,9 @@ void setup()
 	//Write the changes to the file and close it
 	logFile.close();
 	}
+	//Get addresses of the thermometers
+	sensors.getAddress(thermometer0, 0);
+	sensors.getAddress(thermometer1, 0);
 }
 
 void loop()
@@ -113,8 +114,10 @@ void loop()
 	//Set logStgring to null character
 	String logString = "";
 
+	//Reset the temperature reading
+	temperatureDegC = 0;
+
 	//Add device address of sensor 0 to logString, and comma at end
-	sensors.getAddress(thermometer0, 0);
 	logString += tempSensorAddress(thermometer0), ",";
 
 	//Read temperature value and add to the logString
@@ -124,7 +127,6 @@ void loop()
 	logString += floatString(temperatureDegC, 4), ",";
 	
 	//Repeat with sensor 2
-	sensors.getAddress(thermometer1, 0);
 	logString += tempSensorAddress(thermometer1), ",";
 	temperatureDegC = sensors.getTempC(thermometer1);
 	logString += floatString(temperatureDegC, 4), ",";
