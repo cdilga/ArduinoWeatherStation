@@ -4,7 +4,13 @@ Arduino Weather Station
 Please install nesessary headers in the arduino<Version>/libraries folder
 More in formation in the README
 
+Next version:
+Add switch for ledError codes
+Make more codes, including a halt code (No led on)
+When there is an error from one sensor, but is still able to function, flash continuously
+
 Code by Chris Dilger
+Hosted on GitHub
 */
 #include <idDHT11.h>
 
@@ -68,9 +74,11 @@ void ledError(int errorCode = 1)
 
 void setup()
 {
-	//Initialise Serial connection at 115200 (for Visual Micro Debug)
-	//Serial.begin(115200);
-	//while(!Serial);
+	//Initialise Serial connection 115200
+	Serial.begin(115200);
+	//while(!Serial) {}
+	//while (Serial.read() <= 0) {};
+	Serial.println("FAR OUT");
 	//Setup status led
 	pinMode(ledPin, OUTPUT);
 	ledError(NULL);
@@ -95,6 +103,8 @@ void setup()
 		ledError();
 	}else{
 	logFile.println("Number of One Wire devices,Temperature sensor 1,Temperature *C sensor 1,Temperature sensor 2,Temperature *C sensor 2,Temperature sensor 3,Temperature *C sensor 3,Humidity %,Temperature sensor 4,Temperature *C sensor 4,Barometric pressure");
+	//Write the changes to the file and close it
+	logFile.close();
 	}
 }
 
