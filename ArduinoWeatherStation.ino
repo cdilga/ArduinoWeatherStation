@@ -42,16 +42,38 @@ const byte chipSelect = 7;
 
 //A float value to hold tempoary temperature values
 float temperatureDegC;
+
+//The pin number the LED is connected to 
+int ledPin = 6;
 //Declare wrapper for isrCallback function
 void dht11_wrapper()
 {
 	DHT11.isrCallback();
 }
 
+//The error display function
+//This is using an led that will change colours and if reset, will start again from red
+void ledError(int errorCode = 1)
+{
+	if(errorCode = NULL)
+	{
+		digitalWrite(ledPin, HIGH);
+	}else if(errorCode = 1)
+	{
+		digitalWrite(ledPin, LOW);
+		delay(1);
+		digitalWrite(ledPin, HIGH);
+	}
+}
+
 void setup()
 {
-	//Initialise Serial connectionat 9600
-	Serial.begin(9600);
+	//Initialise Serial connection at 115200 (for Visual Micro Debug)
+	//Serial.begin(115200);
+	//while(!Serial);
+	//Setup status led
+	pinMode(ledPin, OUTPUT);
+	ledError(NULL);
 
 	// Initialise the DS18B20 thermometer library
 	sensors.begin();
@@ -73,8 +95,9 @@ void setup()
 	if (!logFile.open("weatherLog.csv", O_RDWR | O_CREAT | O_AT_END)) {
 		//Display error on the led
 		ledError();
-	}
+	}else{
 	logFile.println("Number of One Wire devices,Temperature sensor 1,Temperature *C sensor 1,Temperature sensor 2,Temperature *C sensor 2,Temperature sensor 3,Temperature *C sensor 3,Humidity %,Temperature sensor 4,Temperature *C sensor 4,Barometric pressure");
+	}
 }
 
 void loop()
@@ -101,11 +124,10 @@ void loop()
 	//Aquire DHT11 data, then notify of any errors and add to logstring
 	DHT11.acquire();
 	while (DHT11.acquiring());
-	if (!DHT11.getStatus() = IDDHTLIB_OK)
+	int status = DHT11.getStatus();
+	if (status != IDDHTLIB_OK)
 	{
 		ledError();
-	}else{
-		ledError(NULL);
 	}
 	logString += "DHT11,", DHT11.getCelsius(), ",", DHT11.getHumidity(), ",";
 
@@ -115,10 +137,12 @@ void loop()
 	// open the file for write at end like the Native SD library
 	if (!logFile.open("weatherLog.csv", O_RDWR | O_CREAT | O_AT_END)) {
 		ledError();
-	}
+	}else{
+	ledError(NULL);
 	logFile.println(logString);
 	logFile.close();
-
+	}
+	
 }
 
 
@@ -135,12 +159,14 @@ String tempSensorAddress(DeviceAddress deviceAddress)
   return hexDeviceAddress;
 }
 
+//Function for convering float values to string type
 String floatString(float temp, uint8_t decimalPlaces)
 {
 	String floatStringReturn = "";
 	floatStringReturn += int(temp);
 	floatStringReturn += ".";
+	//This only works because of the way arduino uses floating point numbers
 	floatStringReturn += int((10 ^ decimalPlaces) * (temp - int(temp)));
 	return floatStringReturn;
 }
-	
+

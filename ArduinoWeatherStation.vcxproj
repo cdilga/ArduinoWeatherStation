@@ -78,4 +78,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties VM.DebugTextMessages.TraceWindow="1" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
