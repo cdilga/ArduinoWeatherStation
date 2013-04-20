@@ -59,6 +59,7 @@ void dht11_wrapper()
 
 //The error display function
 //This is using an led that will change colours and if reset, will start again from red
+//Fix this, led does not indicate, rather keep on shinig if there is an error
 void ledError(int errorCode = 1)
 {
 	if(errorCode = NULL)
@@ -67,8 +68,6 @@ void ledError(int errorCode = 1)
 	}else if(errorCode = 1)
 	{
 		digitalWrite(ledPin, LOW);
-		delay(1);
-		digitalWrite(ledPin, HIGH);
 	}
 }
 
@@ -80,6 +79,7 @@ void setup()
 	//Setup status led
 	pinMode(ledPin, OUTPUT);
 	ledError(NULL);
+	//digitalWrite(ledPin, HIGH);
 
 	// Initialise the DS18B20 thermometer library
 	sensors.begin();
@@ -95,8 +95,8 @@ void setup()
 	{
 		ledError();
 	}
-	// open the file for write headings at end 
-	if (!logFile.open("wthr.csv", O_RDWR | O_CREAT | O_AT_END)) {
+	// open the file for write headings at start
+	/*if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT)) {
 		//Display error on the led
 		ledError();
 	}else{
@@ -107,6 +107,7 @@ void setup()
 	//Get addresses of the thermometers
 	sensors.getAddress(thermometer0, 0);
 	sensors.getAddress(thermometer1, 0);
+	*/
 }
 
 void loop()
@@ -118,18 +119,22 @@ void loop()
 	temperatureDegC = 0;
 
 	//Add device address of sensor 0 to logString, and comma at end
-	logString += String(tempSensorAddress(thermometer0)), ",";
+	logString += String(tempSensorAddress(thermometer0));
+	logString += ",";
 
 	//Read temperature value and add to the logString
 	temperatureDegC = sensors.getTempC(thermometer0);
 
 	//Call the conversion function to convert float -> string with 4 decimal places and add to logstring
-	logString += floatString(temperatureDegC, 4), ",";
+	logString += int(temperatureDegC);
+	logString += ",";
 	
 	//Repeat with sensor 2
-	logString += String(tempSensorAddress(thermometer1)), ",";
+	logString += String(tempSensorAddress(thermometer1));
+	logString += ",";
 	temperatureDegC = sensors.getTempC(thermometer1);
-	logString += floatString(temperatureDegC, 4), ",";
+	logString += int(temperatureDegC);
+	logString += ",";
 	
 	//Aquire DHT11 data, then notify of any errors and add to logstring
 	DHT11.acquire();
@@ -139,13 +144,17 @@ void loop()
 	{
 		ledError();
 	}
-	logString += "DHT11,", floatString(DHT11.getCelsius(), 3), ",", floatString(DHT11.getHumidity(), 3), ",";
+	logString += "DHT11,";
+	logString += int(DHT11.getCelsius());
+	logString += ",";
+	logString += int(DHT11.getHumidity());
+	logString += ",";
 
 	//Currently BMP085 unsupported, add a string with value of "NULL" to all relevant BMP085 values
 	logString += "NULL,NULL,NULL";
 	
 	// open the file for write at end like the Native SD library
-	if (!logFile.open("wthr.csv", O_RDWR | O_CREAT | O_AT_END)) {
+	if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT | O_AT_END)) {
 		ledError();
 	}else{
 	ledError(NULL);
@@ -170,6 +179,7 @@ String tempSensorAddress(DeviceAddress deviceAddress)
 }
 
 //Function for convering float values to string type
+/*
 String floatString(float temp, uint8_t decimalPlaces)
 {
 	String floatStringReturn = "";
@@ -179,4 +189,5 @@ String floatString(float temp, uint8_t decimalPlaces)
 	floatStringReturn += int((10 ^ decimalPlaces) * (temp - int(temp)));
 	return floatStringReturn;
 }
+*/
 

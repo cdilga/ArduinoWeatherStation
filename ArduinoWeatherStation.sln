@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Multiple", "D:\arduino-1.0.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadWriteSdFat", "D:\arduino-1.0.2\libraries\SdFat\examples\ReadWriteSdFat\ReadWriteSdFat.vcxproj", "{902FF0FF-26F3-42B5-BDC1-1AFCCD3C0F33}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "relayGpsData", "..\..\..\Arduino\relayGpsData\relayGpsData.vcxproj", "{A85F81F4-CF61-4112-8C69-96669EF9B6A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +33,10 @@ Global
 		{902FF0FF-26F3-42B5-BDC1-1AFCCD3C0F33}.Debug|Win32.Build.0 = Debug|Win32
 		{902FF0FF-26F3-42B5-BDC1-1AFCCD3C0F33}.Release|Win32.ActiveCfg = Release|Win32
 		{902FF0FF-26F3-42B5-BDC1-1AFCCD3C0F33}.Release|Win32.Build.0 = Release|Win32
+		{A85F81F4-CF61-4112-8C69-96669EF9B6A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A85F81F4-CF61-4112-8C69-96669EF9B6A1}.Debug|Win32.Build.0 = Debug|Win32
+		{A85F81F4-CF61-4112-8C69-96669EF9B6A1}.Release|Win32.ActiveCfg = Release|Win32
+		{A85F81F4-CF61-4112-8C69-96669EF9B6A1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
