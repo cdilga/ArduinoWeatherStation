@@ -118,7 +118,7 @@ void loop()
 	temperatureDegC = 0;
 
 	//Add device address of sensor 0 to logString, and comma at end
-	logString += tempSensorAddress(thermometer0), ",";
+	logString += String(tempSensorAddress(thermometer0)), ",";
 
 	//Read temperature value and add to the logString
 	temperatureDegC = sensors.getTempC(thermometer0);
@@ -127,7 +127,7 @@ void loop()
 	logString += floatString(temperatureDegC, 4), ",";
 	
 	//Repeat with sensor 2
-	logString += tempSensorAddress(thermometer1), ",";
+	logString += String(tempSensorAddress(thermometer1)), ",";
 	temperatureDegC = sensors.getTempC(thermometer1);
 	logString += floatString(temperatureDegC, 4), ",";
 	
@@ -139,7 +139,7 @@ void loop()
 	{
 		ledError();
 	}
-	logString += "DHT11,", DHT11.getCelsius(), ",", DHT11.getHumidity(), ",";
+	logString += "DHT11,", floatString(DHT11.getCelsius(), 3), ",", floatString(DHT11.getHumidity(), 3), ",";
 
 	//Currently BMP085 unsupported, add a string with value of "NULL" to all relevant BMP085 values
 	logString += "NULL,NULL,NULL";
