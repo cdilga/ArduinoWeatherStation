@@ -23,7 +23,7 @@ Hosted on GitHub
 
 // Data wire is plugged into pin 8 on the Arduino
 #define ONE_WIRE_BUS 8
-#define TEMPERATURE_PRECISION 12
+#define TEMPERATURE_PRECISION 9
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
@@ -98,7 +98,8 @@ void setup()
 		ledError(1);
 	}
 	// open the file for write headings at start
-	if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT | O_AT_END)) {
+	if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT | O_AT_END)) 
+	{
 		//Display error on the led
 		ledError(1);
 	}else{
@@ -107,28 +108,35 @@ void setup()
 	logFile.close();
 	}
 	//Get addresses of the thermometers
-	sensors.getAddress(thermometer0, 0);
-	sensors.getAddress(thermometer1, 1);
+	if(!sensors.getAddress(thermometer0, 0))
+	{
+			
+	}
+	if(!sensors.getAddress(thermometer1, 1))
+	{
+			
+	}
 	
 }
 
 void loop()
 {
+	//Get temperature readings for OneWire devices
+	sensors.requestTemperatures();
 	//Set logStgring to null character
 	String logString = "";
 
 	//Reset the float value to hold tempoary temperature values
 	float temperatureDegC = 0.00;
-	//Get temperature readings for OneWire devices
-	sensors.requestTemperatures();
+
 	//Add device address of sensor 0 to logString, and comma at end
-	logString += String(tempSensorAddress(thermometer0));
+	//logString += String(tempSensorAddress(thermometer0));
 	logString += ",";
 
 	//Read temperature value and add to the logString
 	temperatureDegC = sensors.getTempC(thermometer0);
 
-	//Call the conversion function to convert float -> string with 4 decimal places and add to logstring
+	//Convert to an int, and add the cell
 	logString += int(temperatureDegC);
 	logString += ",";
 
@@ -136,7 +144,6 @@ void loop()
 	temperatureDegC = 0.00;
 
 	//Repeat with sensor 1
-	sensors.requestTemperatures();
 	logString += String(tempSensorAddress(thermometer1));
 	logString += ",";
 	temperatureDegC = sensors.getTempC(thermometer1);
@@ -168,7 +175,7 @@ void loop()
 	logFile.println(logString);
 	logFile.close();
 	}
-	
+	delay(100);
 }
 
 
