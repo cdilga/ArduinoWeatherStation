@@ -8,6 +8,7 @@ Next version:
 Add switch for ledError codes
 Make more codes, including a halt code (No led on)
 When there is an error from one sensor, but is still able to function, flash continuously
+Add support for full float values to be printed onto the SD card
 
 Code by Chris Dilger
 Hosted on GitHub
@@ -46,9 +47,6 @@ SdFile logFile;
 //Define the chipSelect pin number
 const byte chipSelect = 7;
 
-//A float value to hold tempoary temperature values
-float temperatureDegC;
-
 //The pin number the LED is connected to 
 int ledPin = 6;
 //Declare wrapper for isrCallback function
@@ -60,7 +58,7 @@ void dht11_wrapper()
 //The error display function
 //This is using an led that will change colours and if reset, will start again from red
 //Fix this, led does not indicate, rather keep on shinig if there is an error
-void ledError(int errorCode = 1)
+void ledError(int errorCode)
 {
 	if(errorCode = NULL)
 	{
@@ -84,6 +82,10 @@ void setup()
 	// Initialise the DS18B20 thermometer library
 	sensors.begin();
 
+	//Set resouution of the DS18B20s to 12 bit
+	sensors.setResolution(thermometer0, TEMPERATURE_PRECISION);
+	sensors.setResolution(thermometer1, TEMPERATURE_PRECISION);
+
 	//Set software CS pin as output
 	pinMode(chipSelect, OUTPUT);
 
@@ -93,21 +95,21 @@ void setup()
 	//Begin sdfat with chipselectpin at full speed
 	if(!sd.begin(chipSelect, SPI_FULL_SPEED))
 	{
-		ledError();
+		ledError(1);
 	}
 	// open the file for write headings at start
-	/*if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT)) {
+	if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT | O_AT_END)) {
 		//Display error on the led
-		ledError();
+		ledError(1);
 	}else{
-	logFile.println("Number of One Wire devices,Temperature sensor 1,Temperature *C sensor 1,Temperature sensor 2,Temperature *C sensor 2,Temperature sensor 3,Temperature *C sensor 3,Humidity %,Temperature sensor 4,Temperature *C sensor 4,Barometric pressure");
+	logFile.println("Temperature sensor 1,Temperature *C sensor 1,Temperature sensor 2,Temperature *C sensor 2,Temperature sensor 3,Temperature *C sensor 3,Humidity %,Temperature sensor 4,Temperature *C sensor 4,Barometric pressure");
 	//Write the changes to the file and close it
 	logFile.close();
 	}
 	//Get addresses of the thermometers
 	sensors.getAddress(thermometer0, 0);
-	sensors.getAddress(thermometer1, 0);
-	*/
+	sensors.getAddress(thermometer1, 1);
+	
 }
 
 void loop()
@@ -115,9 +117,10 @@ void loop()
 	//Set logStgring to null character
 	String logString = "";
 
-	//Reset the temperature reading
-	temperatureDegC = 0;
-
+	//Reset the float value to hold tempoary temperature values
+	float temperatureDegC = 0.00;
+	//Get temperature readings for OneWire devices
+	sensors.requestTemperatures();
 	//Add device address of sensor 0 to logString, and comma at end
 	logString += String(tempSensorAddress(thermometer0));
 	logString += ",";
@@ -128,8 +131,12 @@ void loop()
 	//Call the conversion function to convert float -> string with 4 decimal places and add to logstring
 	logString += int(temperatureDegC);
 	logString += ",";
-	
-	//Repeat with sensor 2
+
+	//Reset the temperatureDegC
+	temperatureDegC = 0.00;
+
+	//Repeat with sensor 1
+	sensors.requestTemperatures();
 	logString += String(tempSensorAddress(thermometer1));
 	logString += ",";
 	temperatureDegC = sensors.getTempC(thermometer1);
@@ -142,7 +149,7 @@ void loop()
 	int status = DHT11.getStatus();
 	if (status != IDDHTLIB_OK)
 	{
-		ledError();
+		ledError(1);
 	}
 	logString += "DHT11,";
 	logString += int(DHT11.getCelsius());
@@ -155,7 +162,7 @@ void loop()
 	
 	// open the file for write at end like the Native SD library
 	if (!logFile.open("WTHR.CSV", O_RDWR | O_CREAT | O_AT_END)) {
-		ledError();
+		ledError(1);
 	}else{
 	ledError(NULL);
 	logFile.println(logString);
